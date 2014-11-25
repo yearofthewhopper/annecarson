@@ -1,0 +1,215 @@
+<HTML>
+  <HEAD>
+  	<title>ANNE CARSON'S BLEEDING HEART</title>
+    <SCRIPT language="JavaScript">
+    
+/* Helper functions */
+          
+    function splitOver ( instring, inArray, delimiters ) {
+    	
+    	/* Takes a string, an array, and a string */
+    	/* Outputs an array of strings cut along  */
+    	/* various delimiters                     */
+	
+		var lastCut = 0;
+		var wordCount = 0;
+		instring += delimiters[0];
+	
+		for (var i = 0; i < instring.length; i++) {
+			for (var ii = 0; ii < delimiters.length; ii++) {
+				if (instring[i] === delimiters[ii]) {
+					if (instring.slice(lastCut, i) != "")  {
+						inArray[wordCount] = instring.slice(lastCut, i);
+						wordCount++;
+						lastCut = i+1;
+					}
+				}
+			}		
+		}
+	}  
+	
+	function rndRange ( min, max ) {
+		/* Takes two integers, outputs an integer */
+		return Math.floor((Math.random()*((max+1)-min)) + min); 
+	}
+
+/* Begin wordGram class */
+
+	function wordGram () {
+		this.txt = "";
+		this.link = [];
+		this.linkStrength = [];
+		this.nLinks = 0;
+	}
+
+	wordGram.prototype.copy = function() {
+    	var copy = new wordGram ()
+    	copy.txt = this.txt
+    	for (var i = 0; i < this.nLinks; i++) {
+    		copy.link[i] = new wordGram();
+        	copy.link[i] = this.link[i];
+        	copy.linkStrenth[i] = new Number( this.linkStrength[i] )
+    	}
+	copy.nLinks = this.nLinks;
+    	return copy;
+	}
+
+/* Begin wordGramContext class */
+
+	var MAX_GRAMS = 200000;
+	
+	function wordGramContext () {
+		this.nWordGrams = 0;
+		this.words = [];
+	}
+	
+	wordGramContext.prototype.wordGramByTxt = function ( intxt ) {
+		/* Takes a string, returns the index in the array words[] */
+		/* If the string is not found it returns -1               */
+		for (var i = 0; i < this.nWordGrams; i++) {
+			if (intxt === this.words[i].txt) { return i; }
+		}
+		return -1;
+	}
+	
+	wordGramContext.prototype.addWord = function ( _word ) {
+		/* Takes a string */
+		if (_word === "") { return; }
+		if (this.nWordGrams >= MAX_GRAMS) { console.log ("Memory Full"); return; }
+		if (this.nWordGrams === 0) {
+			this.nWordGrams++;
+			this.words[0] = new wordGram();
+			this.words[0].txt = _word;
+			return;
+			
+		}
+		for (var i=0; i < this.nWordGrams; i++) {
+			if (this.words[i].txt === _word) { return; }
+		}
+		this.nWordGrams++;
+		this.words[this.nWordGrams-1] = new wordGram();
+		this.words[this.nWordGrams-1].txt = _word;
+	}
+	
+	wordGramContext.prototype.addLink = function ( _word, _wordGram ) {
+		/* Takes two strings */
+		if (_word === "" || _wordGram === "" ) { return; }
+		
+		var idx1 = this.wordGramByTxt( _word ); 
+		var idx2 = this.wordGramByTxt( _wordGram );
+		
+		if (idx1 === -1) { 
+			this.addWord( _word );
+			idx1 = this.nWordGrams-1;
+		}
+		
+		if (idx2 === -1) { 
+			this.addWord( _wordGram );
+			idx2 = this.nWordGrams-1;
+		}
+		/* Does link exist? Then increment strength */
+		
+		if (this.words[idx1].nLinks != 0) { 
+			for (var i =0; i < this.words[idx1].nLinks; i++) {
+				if ( _wordGram === this.words[idx1].link[i] ) {
+					this.words[idx1].linkStrength[i]++;
+					return;
+				}
+			}
+		}
+		
+		/* No link? Then add it */
+		
+		this.words[idx1].nLinks++;
+		
+		this.words[idx1].link[this.words[idx1].nLinks-1] = new wordGram();
+		this.words[idx1].link[this.words[idx1].nLinks-1] = this.words[idx2];
+		this.words[idx1].linkStrength[ this.words[idx1].nLinks-1 ] = new Number(1);
+		
+	}
+	
+	wordGramContext.prototype.eat = function ( instring ) {
+		/* Takes a string */
+		var inWords = new Array();
+		var delim = " !?.,;:<>[]()\r\n";
+		instring = instring.toLowerCase();
+		splitOver ( instring, inWords, delim );
+		
+		for (var i=1; i < inWords.length; i++) {
+			this.addLink ( inWords[i-1], inWords[i] );
+		}
+	}
+	
+	wordGramContext.prototype.genLine = function ( nWords ) {
+		/* Takes an integer, returns a string */
+		if (nWords === 0) { nWords = rndRange(3,10); }
+		var res = "";
+		if (this.nWordGrams === 0) { return "Eat some words."; }
+		
+		var pick = rndRange (0, this.nWordGrams-1);
+						
+		for (var i = 0; i < nWords; i++ ) {
+			
+			if (this.words[pick].nLinks > 1) {
+				/* If there is more than 1 link */
+				var pick1 = rndRange(0, this.words[pick].nLinks-1);
+				var pick2 = rndRange(0, this.words[pick].nLinks-1);
+				
+				var roll1 = this.words[pick].linkStrength[pick1]*Math.random();
+				var roll2 = this.words[pick].linkStrength[pick2]*Math.random();
+				
+				if (roll1 > roll2 ) {
+					res = res + " " + this.words[pick].link[pick1].txt;
+					pick = this.wordGramByTxt (this.words[pick].link[pick1].txt);
+				} else {
+					res = res + " " + this.words[pick].link[pick2].txt;
+					pick = this.wordGramByTxt (this.words[pick].link[pick2].txt);					
+				}
+			} else {
+				/* If there is only one link */
+				if (this.words[pick].nLinks != 0) {
+					res = res + " " + this.words[pick].link[0].txt;
+					pick = this.wordGramByTxt (this.words[pick].link[0].txt);
+				} else {
+					pick = rndRange (0, this.nWordGrams-1);
+				}
+			}		
+			
+			if (pick === -1) { pick = rndRange (0, this.nWordGrams-1); }
+		}
+		return res;
+	}
+	
+	var myContext = new wordGramContext();
+	
+    </SCRIPT>
+   </HEAD>
+   <BODY>
+	<textarea id = "inputBox" text-align: center cols="50" rows="25" style="background-color:#0099FF;color:#FFFFFF;border:5px double #FFFFFF;"> Daniel, welcome to Anne Carson's bleeding heart..</textarea>
+	<textarea id = "outputBox" text-align: center cols="25" rows="25" style="background-color:#0099FF;color:#FFFFFF;border:5px double #FFFFFF;"></textarea>
+	<br>
+	<button onclick="eatBox();">CONSUME</button>
+	<button onclick="genLine();">SPIT IT OUT</button>
+	<p id="text_">
+	        <br>
+	</p>
+
+      <SCRIPT language="JavaScript">
+
+	function eatBox() { 
+	   var foo = document.getElementById( 'inputBox' ).value;
+	   document.getElementById( 'inputBox' ).value = "";
+	   myContext.eat (foo);  
+ 	 }
+ 	 
+ 	 function genLine( ) {
+ 	 	var nWords = window.prompt("How many words?","10");
+ 	 	var foo = myContext.genLine( parseInt(nWords) );
+ 	 	document.getElementById ('outputBox').value += foo + "\r\n"; 
+ 	 }
+
+      </SCRIPT>
+   </BODY>
+</HTML>
+
+

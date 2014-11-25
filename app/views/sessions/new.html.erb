@@ -1,0 +1,17 @@
+
+<div class="row bump">
+	<div class="medium-6 columns">
+	<div class="panel">
+	<h3 class="subheader">Make your account</h3>
+	<hr>
+	   <%= form_for(:session, url: session_path) do |form| %>
+		<div>
+			<%= form.label :email %>
+			<%= form.text_field :email %>
+		</div>
+		<%= form.submit "Sign in", class: "button radius small" %>
+		<% end %>	
+	</div>
+	</div>
+</div>
+
