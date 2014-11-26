@@ -56,7 +56,7 @@ a.btn {
 
 
 
-body {  background-color:#a23410;
+body {  background-color:#000000;
         color:#fff;
         font-family: Arial, sans-serif;
         font-size:11px;
@@ -101,12 +101,12 @@ a.btn {
   cursor: pointer;
   display: inline-block;
   width: 75px;
-  color: red;
+  color: #000000;
 }
-body {  background-color:#e1e1e1;
-        color:#fff;
+body {  background-color:#000000;
+        color:#000000;
         font-family: Arial, sans-serif;
-        font-size:11px;
+        font-size:15px;
         line-height: 14px;
       
         padding:50px;
@@ -116,7 +116,7 @@ $(function() {
   $('.datepicker').datepicker();
 });
 
-.box {  background-color:#ff4499;
+.box {  background-color:#000000;
         -moz-border-radius:100px;
         -khtml-border-radius: 3px;
         -webkit-border-radius:3px;
@@ -139,10 +139,10 @@ $(function() {
                  
                 }
       
-#container { background: red;}
+#container { background: #000000;}
 
-.size21, .size22, .size23, .twocols { background: #ccc }
-.size31, .size32, .size33, .threecols { background: #ff9999 }
+.size21, .size22, .size23, .twocols { background: #000000 }
+.size31, .size32, .size33, .threecols { background: #000000 }
 
 a.btn {
   margin-right: 1px;
@@ -151,9 +151,8 @@ a.btn {
   cursor: pointer;
   display: inline-block;
   width: 75px;
-  color: red;
+  color: #000000;
+  background-color: #000000;
 }}
-
-
 
 
