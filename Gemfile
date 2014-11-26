@@ -29,6 +29,7 @@ gem 'jquery-ui-rails'
 # Foundation - make sure this looks great!
 gem 'foundation-rails'
 
+gem 'better_errors'
 
 gem 'jbuilder', '~> 1.2'
 
