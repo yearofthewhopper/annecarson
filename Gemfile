@@ -17,7 +17,7 @@ gem 'coffee-rails', '~> 4.0.0'
 
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
-
+gem 'unicorn'
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
@@ -26,6 +26,8 @@ gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jquery-ui-rails'
+
+gem 'compass'
 # Foundation - make sure this looks great!
 gem 'foundation-rails'
 
