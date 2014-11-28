@@ -19,4 +19,9 @@
   display: inline-block;
   color: #ffffff;
   background-color: #000000;
+
+}
+
+.nolands-button a:hover {
+	color: #ffffff;
 }
