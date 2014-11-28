@@ -11,9 +11,6 @@ body {	background-color:#e1e1e1;
       	padding:50px;
 				margin:0px;	
 				}
-$(function() {
-  $('.datepicker').datepicker();
-});
 
 .box { 	background-color:#ff4499;
 				-moz-border-radius:3px;
