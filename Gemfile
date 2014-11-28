@@ -35,6 +35,8 @@ gem 'better_errors'
 
 gem 'jbuilder', '~> 1.2'
 
+gem 'metamagic'
+
 gem 'word_salad'
 
 group :doc do
