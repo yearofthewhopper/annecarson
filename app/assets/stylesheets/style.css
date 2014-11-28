@@ -138,7 +138,7 @@ body {  background-color:#000000;
 .size21, .size22, .size23, .twocols { background: #000000 }
 .size31, .size32, .size33, .threecols { background: #000000 }
 
-a.btn {
+.nolands-button {
   margin-right: 1px;
   line-height: 30px;
   height: 30px;
