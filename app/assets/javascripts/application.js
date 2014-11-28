@@ -10,11 +10,11 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require_self
 //= require jquery
 //= require application.js
 //= require foundation
 //= require turbolinks
-//= require_self
 //= require_tree .
 
 $(function(){ $(document).foundation(); });
